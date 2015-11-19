@@ -1,5 +1,5 @@
 :- dynamic
-    zapamietane/3.
+    zapamietane/2.
 
 powinien_mieszkac_w(ustrzyki_gorne) :- woli_mieszkac(na_wsi),
                         wskazana_bliskosc(gory),
@@ -29,8 +29,8 @@ powinien_mieszkac_w(rzeszow) :- woli_mieszkac(w_miescie),
 							wskazana_bliskosc(gory).
 							
 powinien_mieszkac_w(zakopane) :- wskazana_bliskosc(gory),
-								pytaj(czy, nie_przeszkadza_duzy_ruch),
-								pytaj(czy, nie_przeszkadzaja_tlumy).
+								pozytywne(nie_przeszkadza_duzy_ruch),
+								pozytywne(nie_przeszkadzaja_tlumy).
 								
 powinien_mieszkac_w(sandomierz) :- lubi(miasta_turystyczne),
 									zalezy_aby_mieszkac(na_wschodzie).
@@ -49,61 +49,65 @@ woli_mieszkac(na_wsi) :- moze_mieszkac(na_wsi), spelnia_warunki(na_wsi).
 
 woli_mieszkac(w_miescie) :- spelnia_warunki(w_miescie).
 
-moze_mieszkac(na_wsi) :- pytaj(czy, masz_prawo_jazdy).
-moze_mieszkac(na_wsi) :- \+pytaj(czy, praca_zwiazana_z_miastem).
+moze_mieszkac(na_wsi) :- pozytywne(masz_prawo_jazdy).
+moze_mieszkac(na_wsi) :- negatywne(praca_zwiazana_z_miastem).
 
-spelnia_warunki(na_wsi) :- \+pytaj(czy, wolisz_bliskosc_kina_niz_lasu),
-                           pytaj(czy, nie_przeszkadza_duza_odleglosc_do_sklepu).
+spelnia_warunki(na_wsi) :- negatywne(wolisz_bliskosc_kina_niz_lasu),
+                           pozytywne(nie_przeszkadza_duza_odleglosc_do_sklepu).
 
-spelnia_warunki(w_miescie) :- pytaj(czy, wolisz_bliskosc_kina_niz_lasu),
-                              pytaj(czy, nie_przeszkadza_duzy_ruch).
+spelnia_warunki(w_miescie) :- pozytywne(wolisz_bliskosc_kina_niz_lasu),
+                              pozytywne(nie_przeszkadza_duzy_ruch).
 
-wskazana_bliskosc(gory) :- pytaj(czy, lubisz_chodzic_po_gorach).
-wskazana_bliskosc(gory) :- pytaj(czy, uprawiasz_sporty_zimowe).
+wskazana_bliskosc(gory) :- pozytywne(lubisz_chodzic_po_gorach).
+wskazana_bliskosc(gory) :- pozytywne(uprawiasz_sporty_zimowe).
 
-wskazana_bliskosc(woda) :- pytaj(czy, lubisz_wypoczywac_na_plazy).
-wskazana_bliskosc(woda) :- pytaj(czy, zeglujesz).
+wskazana_bliskosc(woda) :- pozytywne(lubisz_wypoczywac_na_plazy).
+wskazana_bliskosc(woda) :- pozytywne(zeglujesz).
 
-preferuje_dojazd(komunikacja_miejska) :- \+pytaj(czy, lubisz_jezdzic_autem).
-preferuje_dojazd(komunikacja_miejska) :- pytaj(czy, nie_przeszkadzaja_tlumy),
-									     pytaj(czy, lubisz_czytac_ksiazki).
+preferuje_dojazd(komunikacja_miejska) :- negatywne(lubisz_jezdzic_autem).
+preferuje_dojazd(komunikacja_miejska) :- pozytywne(nie_przeszkadzaja_tlumy),
+									     pozytywne(lubisz_czytac_ksiazki).
 										 
-lubi(miasta_turystyczne) :- pytaj(czy, nie_przeszkadzaja_tlumy),
-							pytaj(czy, lubisz_zwiedzac_zabytki),
-							pytaj(czy, lubisz_zwiedzac_muzea).
+lubi(miasta_turystyczne) :- pozytywne(nie_przeszkadzaja_tlumy),
+							pozytywne(lubisz_zwiedzac_zabytki),
+							pozytywne(lubisz_zwiedzac_muzea).
 							
-lubi(odosobnienie) :- \+pytaj(czy, nie_przeszkadzaja_tlumy),
-                        pytaj(czy, nie_przeszkadza_brak_lub_slaby_zasieg_telefoniczny).
+lubi(odosobnienie) :- negatywne(nie_przeszkadzaja_tlumy),
+                        pozytywne(nie_przeszkadza_brak_lub_slaby_zasieg_telefoniczny).
 										 
-preferuje_dojazd(auto) :- pytaj(czy, lubisz_jezdzic_autem),
-                          pytaj(czy, masz_prawo_jazdy).
+preferuje_dojazd(auto) :- pozytywne(lubisz_jezdzic_autem),
+                          pozytywne(masz_prawo_jazdy).
 						  
-zalezy_aby_mieszkac(na_wschodzie) :- \+pytaj(czy, zalezy_aby_mieszkac_na_zachodzie),
-									   pytaj(czy, zalezy_aby_mieszkac_na_wschodzie).
+zalezy_aby_mieszkac(na_wschodzie) :- negatywne(zalezy_aby_mieszkac_na_zachodzie),
+									   pozytywne(zalezy_aby_mieszkac_na_wschodzie).
 						
-zalezy_aby_mieszkac(na_zachodzie) :- \+pytaj(czy, zalezy_aby_mieszkac_na_wschodzie),
-									   pytaj(czy, zalezy_aby_mieszkac_na_zachodzie).
+zalezy_aby_mieszkac(na_zachodzie) :- negatywne(zalezy_aby_mieszkac_na_wschodzie),
+									   pozytywne(zalezy_aby_mieszkac_na_zachodzie).
 						
-przeklada_spokoj_nad_mozliwosci :- pytaj(czy, bardziej_od_mozliwosci_rozwoju_zawodowego_cenisz_bliskosc_zieleni),
-                                   pytaj(czy, lubisz_gdy_miasto_noca_zamiera).
+przeklada_spokoj_nad_mozliwosci :- pozytywne(bardziej_od_mozliwosci_rozwoju_zawodowego_cenisz_bliskosc_zieleni),
+                                   pozytywne(lubisz_gdy_miasto_noca_zamiera).
 								   
-przeklada_mozliwosci_nad_spokoj :- pytaj(czy, lubisz_gdy_miasto_noca_tetni_zyciem),
-								   \+pytaj(czy, bardziej_od_mozliwosci_rozwoju_zawodowego_cenisz_bliskosc_zieleni).
+przeklada_mozliwosci_nad_spokoj :- pozytywne(lubisz_gdy_miasto_noca_tetni_zyciem),
+								   negatywne(bardziej_od_mozliwosci_rozwoju_zawodowego_cenisz_bliskosc_zieleni).
 
-pytaj(X,Y) :- zapamietane(X, Y, tak),
+negatywne(X) :- \+pozytywne(X).
+								   
+pozytywne(X) :- zapamietane(X, tak),
               !.
 			  
-pytaj(X,Y) :- zapamietane(X, Y, _),
+pozytywne(X) :- zapamietane(X, _),
               !,
 			  fail.
+			  
+pozytywne(X) :- pytaj(X).
                     
-pytaj(X,Y) :- format('~w ~w ? (t/n)~n',[X,Y]),
+pytaj(X) :- format('Czy ~w ? (t/n)~n',[X,Y]),
                     read(Reply),
-                    pamietaj(X, Y, Reply),
+                    pamietaj(X, Reply),
 					(Reply = 't').
 					
-pamietaj(X, Y, 't') :- assertz(zapamietane(X, Y, tak)), !.
-pamietaj(X, Y, _) :- assertz(zapamietane(X, Y, nie)).
+pamietaj(X, 't') :- assertz(zapamietane(X, tak)), !.
+pamietaj(X, _) :- assertz(zapamietane(X, nie)).
 
 wyczysc_fakty :- write('Przycisnij cos aby wyjsc'), nl,
                     retractall(zapamietane(_,_,_)),
