@@ -127,17 +127,13 @@ jpl_answer_OK(X) :-
 	jpl_new('javax.swing.JFrame', ['frame with dialog'], F),
 	jpl_call(F, setVisible, [@(false)], _),
 	jpl_call('javax.swing.JOptionPane',showMessageDialog,[F,A], N),
-	jpl_call(F, dispose, [], _),
-	Reply='t',
-	(Reply='t').
+	jpl_call(F, dispose, [], _).
 
 jpl_answer_NF(X) :-
 	jpl_new('javax.swing.JFrame', ['frame with dialog'], F),
 	jpl_call(F, setVisible, [@(false)], _),
 	jpl_call('javax.swing.JOptionPane',showMessageDialog,[F,'Nie jestem w stanie znalezc miejsca do zycia dla ciebie'], N),
-	jpl_call(F, dispose, [], _),
-	Reply='t',
-	(Reply='t').
+	jpl_call(F, dispose, [], _).
 
 pamietaj(X, 't') :- assertz(zapamietane(X, tak)), !.
 pamietaj(X, _) :- assertz(zapamietane(X, nie)).
@@ -150,5 +146,5 @@ wykonaj :- powinien_mieszkac_w(X), !,
 			jpl_answer_OK(X),
             nl, wyczysc_fakty.
 
-wykonaj :- jpl_ansewer_NF(X), nl,
+wykonaj :- jpl_answer_NF(X),
             wyczysc_fakty.
