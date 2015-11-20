@@ -122,6 +122,23 @@ jpl_pytaj(X) :-
 	pamietaj(X,Reply),
 	(Reply = 't').
 
+jpl_answer_OK(X) :-
+	atom_concat('Twoim wymarzonym miejscem do zycia moze byc ',X,A),
+	jpl_new('javax.swing.JFrame', ['frame with dialog'], F),
+	jpl_call(F, setVisible, [@(false)], _),
+	jpl_call('javax.swing.JOptionPane',showMessageDialog,[F,A], N),
+	jpl_call(F, dispose, [], _),
+	Reply='t',
+	(Reply='t').
+
+jpl_answer_NF(X) :-
+	jpl_new('javax.swing.JFrame', ['frame with dialog'], F),
+	jpl_call(F, setVisible, [@(false)], _),
+	jpl_call('javax.swing.JOptionPane',showMessageDialog,[F,'Nie jestem w stanie znalezc miejsca do zycia dla ciebie'], N),
+	jpl_call(F, dispose, [], _),
+	Reply='t',
+	(Reply='t').
+
 pamietaj(X, 't') :- assertz(zapamietane(X, tak)), !.
 pamietaj(X, _) :- assertz(zapamietane(X, nie)).
 
@@ -130,8 +147,8 @@ wyczysc_fakty :- write('Przycisnij cos aby wyjsc'), nl,
                     get_char(_).
 
 wykonaj :- powinien_mieszkac_w(X), !,
-            format('~nTwoim wymarzonym miejscem do zycia moze byc ~w', X),
+			jpl_answer_OK(X),
             nl, wyczysc_fakty.
 
-wykonaj :- write('Nie jestem w stanie znalezc miejsca do zycia dla ciebie'), nl,
+wykonaj :- jpl_ansewer_NF(X), nl,
             wyczysc_fakty.
