@@ -1,5 +1,9 @@
 :- use_module(library(jpl)).
 
+replace_word(Old, New, Orig, Replaced) :-
+    atomic_list_concat(Split, Old, Orig),
+    atomic_list_concat(Split, New, Replaced).
+	
 :- dynamic
     zapamietane/2.
 
@@ -110,7 +114,8 @@ pytaj(X) :- format('Czy ~w ? (t/n)~n',[X]),
 
 jpl_pytaj(X) :-
 	atom_concat('Czy ',X,Q1),
-	atom_concat(Q1,'?',Q),
+	atom_concat(Q1,'?',Q2),
+	replace_word("_"," ",Q2,Q),
 	jpl_new('javax.swing.JFrame', ['frame with dialog'], F),
 	jpl_call(F, setVisible, [@(false)], _),
 	jpl_call('javax.swing.JOptionPane', showConfirmDialog, [F,Q], N),
@@ -123,7 +128,8 @@ jpl_pytaj(X) :-
 	(Reply = 't').
 
 jpl_answer_OK(X) :-
-	atom_concat('Twoim wymarzonym miejscem do zycia moze byc ',X,A),
+	atom_concat('Twoim wymarzonym miejscem do zycia moze byc ',X,A1),
+	replace_word("_"," ",A1,A),
 	jpl_new('javax.swing.JFrame', ['frame with dialog'], F),
 	jpl_call(F, setVisible, [@(false)], _),
 	jpl_call('javax.swing.JOptionPane',showMessageDialog,[F,A], N),
@@ -148,3 +154,5 @@ wykonaj :- powinien_mieszkac_w(X), !,
 
 wykonaj :- jpl_answer_NF(X),
             wyczysc_fakty.
+
+:- wykonaj.
